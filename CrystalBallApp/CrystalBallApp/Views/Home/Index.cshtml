@@ -1,0 +1,60 @@
+﻿@{
+    ViewBag.Title = "Crystal Ball App";
+}
+<style>
+    #results {
+        background-image: url('../../Content/Images/crystalBall.jpg');
+        background-size:cover;
+        background-repeat:no-repeat;
+        width:500px;
+        height:500px;
+        
+
+  }
+    #phrase{
+        position:absolute;
+        margin: auto 0;
+        font-family:Tahoma Verdana sans-serif;
+        font-size: 18px;
+        text-align:center;
+        font-weight:bold;
+    }
+
+</style>
+<div id="results">
+    <div id="phrase"></div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var img = new Image();
+        img.src = '../../Content/Images/crystalBall.jpg';
+        img.onload = function () {
+            $("#results").css("width", img.width);
+            $("#results").css("height", img.height);
+            $("#phrase").css("width", img.width);
+            $("#phrase").css("top", img.height/ 2);
+
+        }
+        var finished = true; //initialize finished to true. This allows new phrase to be accessed.
+        $("#phrase").fadeOut();//initialize phrase fadeout  so first run of mouseover doesn't look choppy. 
+
+        $("#results").mouseover(function () {
+            console.log(finished);
+            if (finished == true) {
+                finished = false; // set finished to false. We don't want a user to interrupt our flow if they mouseover again.
+                $.get('@Url.Action("ShakeBall","Home")', function (response) {
+                    $("#phrase").text(response);
+                    $("#phrase").fadeIn(1000, function () {
+                        
+                    }).fadeOut(1000, function () {
+                        $("#phrase").text("");
+                        finished = true; //reset finished to true;
+                    });
+                });
+            }
+         });
+
+
+    });
+</script>
